@@ -6,8 +6,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Annotated
 
-pg_password = os.getenv("POSTGRES_ADMIN_PASSWORD")
-SQLALCHEMY_DATABASE_URL = f'postgresql://authuser:{pg_password}:@localhost/conscious_auth'
+PG_USER = os.getenv("POSTGRES_ADMIN_USER", "authuser")
+PG_PASSWORD = os.getenv("POSTGRES_ADMIN_PASSWORD")
+DATABASE_SERVER = os.getenv("DATABASE_SERVER", "localhost")
+SQLALCHEMY_DATABASE_URL = f'postgresql://{PG_USER}:{PG_PASSWORD}:@{DATABASE_SERVER}'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
