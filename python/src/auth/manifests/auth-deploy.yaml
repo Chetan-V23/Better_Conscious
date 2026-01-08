@@ -14,18 +14,18 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 3
-    template:
-      metadata:
-        labels:
-          app: auth
-      spec:
-        containers:
-          - name: auth
-            image: r0dent/auth:latest
-            ports:
-              - containerPort: 8000
-            env:
-              - configMapRef:
-                  name: auth-configmap
-              - secretRef:
-                  name: auth-secret
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: r0dent/auth:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: auth-configmap
+            - secretRef:
+                name: auth-secret

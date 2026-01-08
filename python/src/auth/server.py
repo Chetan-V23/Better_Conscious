@@ -20,7 +20,7 @@ def login(payload: UserCreate, db: db_dependency):
     if not user_record or user_record.password != auth_password:
         return exceptions.HTTPException(status_code=401, detail="Invalid credentials")
     else:
-        return User(id=user_record.id, name=user_record.name, email=user_record.email)
+        return User(id=user_record.id, name=user_record.name, email=user_record.email, jwt_token=user_record.jwt_token)
     
 
 @app.post('/register', response_model=User)
