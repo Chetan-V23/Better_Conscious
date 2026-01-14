@@ -1,4 +1,3 @@
-import os, json
 from fastapi import FastAPI, Request, exceptions
 from dotenv import load_dotenv
 
@@ -7,10 +6,14 @@ from auth_svc.access import login
 from auth import validate
 from models import UserLoginRequest
 import storage.util as util
+import pika
 
 load_dotenv()
 
 Base.metadata.create_all(bind=engine)
+
+connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
+channel = connection.channel()
 
 app = FastAPI()
 
@@ -31,7 +34,7 @@ def upload(request: Request, db: db_dependency):
     if len(request.body["company_name"]) == 0 or request.body["company_name"] is None:
         raise exceptions.HTTPException(status_code=400, detail="Company name is required [company_name]")
 
-    util.upload_company_data_to_rabbitmq(request.body["company_name"], db)
+    util.upload_company_data_to_rabbitmq(request.body["company_name"],access, db, rmq_channel=channel)
 
 @app.get("/get_company_info")
 def get_company_info(request: Request, db: db_dependency):
