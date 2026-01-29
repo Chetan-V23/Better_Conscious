@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  AUTH_SERVER_URL: "auth:5000"
+  DATABASE_SERVER: "host.minikube.internal/conscious_content"

@@ -11,7 +11,7 @@ PG_USER = os.getenv("POSTGRES_ADMIN_USER", "authuser")
 PG_PASSWORD = os.getenv("POSTGRES_ADMIN_PASSWORD")
 DATABASE_SERVER = os.getenv("DATABASE_SERVER")
 #For testing
-DATABASE_SERVER = "localhost:5432/conscious_content"
+# DATABASE_SERVER = "localhost:5432/conscious_content"
 SQLALCHEMY_DATABASE_URL = f'postgresql://{PG_USER}:{PG_PASSWORD}:@{DATABASE_SERVER}'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
