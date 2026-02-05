@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llmcaller
+  labels:
+    app: llmcaller
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: llmcaller
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 8
+  template:
+    metadata:
+      labels:
+        app: llmcaller
+    spec:
+      containers:
+        - name: llmcaller
+          image: r0dent/llmcaller
+          envFrom:
+            - configMapRef:
+                name: llmcaller-configmap
+            - secretRef:
+                name: llmcaller-secret

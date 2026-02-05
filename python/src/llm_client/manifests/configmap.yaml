@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llmcaller-configmap
+data:
+  COMPANY_NAME_QUEUE: company_name
+  COMPANY_ACTS_QUEUE: company_acts
+
