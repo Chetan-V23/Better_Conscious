@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, exceptions
 from dotenv import load_dotenv
 
 from database import db_dependency, Base, engine
-from auth_svc.access import login
+from auth_svc.access import login as auth_login
 from auth import validate
 from models import UserLoginRequest
 import storage.util as util
@@ -19,7 +19,7 @@ app = FastAPI()
 
 @app.post("/login")
 def login(payload: UserLoginRequest):
-    token, err = login(payload)
+    token, err = auth_login(payload)
 
     if not err:
         return token

@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import pika
 import os
 import sys
+from llm_caller import start
 
 load_dotenv()
 
@@ -16,13 +17,12 @@ def main():
 
     def callback(ch, method, properties, body):
         #RUN LLM
-        
+        res = start(body,channel)
         err = None
         if err:
             ch.basic_nack(delivery_tag = method.delivery_tag)
         else:
             ch.basic_ack(delivery_tag = method.delivery_tag)
-        pass
 
     channel.basic_consume(
         queue=os.getenv("COMPANY_NAME_QUEUE"), on_message_callback=callback

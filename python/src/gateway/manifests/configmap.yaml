@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: gateway-config
 data:
-  AUTH_SERVER_URL: "auth:5000"
+  AUTH_SERVER_URL: "http://auth:8000"
   DATABASE_SERVER: "host.minikube.internal/conscious_content"
