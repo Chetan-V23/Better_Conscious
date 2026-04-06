@@ -16,7 +16,7 @@ def login(payload: UserLogin, db: db_dependency):
     auth_password = payload.password
     user_record = db.query(UserModel).filter(UserModel.email == auth_email).first()
     if not user_record or user_record.password != auth_password:
-        return exceptions.HTTPException(status_code=401, detail="Invalid credentials")
+        raise exceptions.HTTPException(status_code=401, detail="Invalid credentials")
     else:
         token = create_jwt.create_access_token(data={"email": payload.email, "admin": True})
         return UserResponseModel(id=user_record.id, name=user_record.name, email=user_record.email, jwt_token=token)
@@ -26,7 +26,7 @@ def login(payload: UserLogin, db: db_dependency):
 def register(payload: UserCreate, db: db_dependency):
     existing_user = db.query(UserModel).filter(UserModel.email == payload.email).first()
     if existing_user:
-        return exceptions.HTTPException(status_code=400, detail="User already exists")
+        raise exceptions.HTTPException(status_code=400, detail="User already exists")
     
     token = create_jwt.create_access_token(data={"email": payload.email, "admin": True})
     new_user = UserModel(
@@ -44,7 +44,7 @@ def register(payload: UserCreate, db: db_dependency):
 def delete_user(email: str, db: db_dependency):
     user_record = db.query(UserModel).filter(UserModel.email == email).first()
     if not user_record:
-        return exceptions.HTTPException(status_code=404, detail="User not found")
+        raise exceptions.HTTPException(status_code=404, detail="User not found")
     
     db.delete(user_record)
     db.commit()
@@ -54,14 +54,14 @@ def delete_user(email: str, db: db_dependency):
 def validate_token(request: requests.Request):
     token = request.headers.get("Authorization")
     if not token:
-        return exceptions.HTTPException(status_code=401, detail="Token missing")
+        raise exceptions.HTTPException(status_code=401, detail="Token missing")
     
     jwt = token.split(" ")[1]
-    is_valid, error= create_jwt.verify_jwt_token(jwt)
+    is_valid, error, admin_status= create_jwt.verify_jwt_token(jwt)
     if not is_valid:
-        return exceptions.HTTPException(status_code=401, detail=error)
+        raise exceptions.HTTPException(status_code=401, detail=error)
     
-    return {"detail": "Token is valid"}
+    return {"detail": "Token is valid", "admin": admin_status}
 
 if __name__ == "__main__":
     import uvicorn
