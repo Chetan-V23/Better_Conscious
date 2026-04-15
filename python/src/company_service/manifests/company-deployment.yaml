@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llmcaller
+  name: company
   labels:
-    app: llmcaller
+    app: company
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: llmcaller
+      app: company
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,13 +16,15 @@ spec:
   template:
     metadata:
       labels:
-        app: llmcaller
+        app: company
     spec:
       containers:
-        - name: llmcaller
-          image: r0dent/llmcaller
+        - name: company
+          image: r0dent/company
+          ports:
+            - containerports: 8081
           envFrom:
             - configMapRef:
-                name: llmcaller-configmap
+                name: company-configmap
             - secretRef:
-                name: llmcaller-secret
+                name: company-secret

@@ -28,4 +28,4 @@ def verify_jwt_token(token: str) -> tuple:
         return False, f"Invalid token: {str(e)}"
     except Exception as e:
         return False, f"Error decoding token: {str(e)}"
-    return True, "", decoded_token["admin"]
+    return True, "", decoded_token

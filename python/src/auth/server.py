@@ -57,11 +57,11 @@ def validate_token(request: requests.Request):
         raise exceptions.HTTPException(status_code=401, detail="Token missing")
     
     jwt = token.split(" ")[1]
-    is_valid, error, admin_status= create_jwt.verify_jwt_token(jwt)
+    is_valid, error, decoded_token= create_jwt.verify_jwt_token(jwt)
     if not is_valid:
         raise exceptions.HTTPException(status_code=401, detail=error)
     
-    return {"detail": "Token is valid", "admin": admin_status}
+    return {"detail": "Token is valid", "admin": decoded_token["admin"], "email":decoded_token["email"]}
 
 if __name__ == "__main__":
     import uvicorn

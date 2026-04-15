@@ -1,19 +1,22 @@
 from fastapi import FastAPI, Request, exceptions
 from dotenv import load_dotenv
 
-from database import db_dependency, Base, engine
 from auth_svc.access import login as auth_login
-from auth import validate
-from models import UserLoginRequest
-import storage.util as util
-import pika
+from company_svc.call_service import forward_company_info_request
+from auth.validate import token
+from models import UserLoginRequest, UserRequestForCompanyInfo
+import os
+
+
+DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
+
+if DEBUG_MODE:
+    import debugpy
+    debugpy.listen(("0.0.0.0", 5678))
+    print("Debugger listening on port 5678..")
+    debugpy.wait_for_client()
 
 load_dotenv()
-
-Base.metadata.create_all(bind=engine)
-
-connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
-channel = connection.channel()
 
 app = FastAPI()
 
@@ -26,15 +29,18 @@ def login(payload: UserLoginRequest):
     else:
         return err
     
-@app.get("/upload")
-def upload(request: Request, db: db_dependency):
-    access, err = validate.token(request)
+@app.get("/company_acts")
+def upload(request: Request, payload: UserRequestForCompanyInfo):
+
+    access, err = token(request)
+    if err:
+        return exceptions.HTTPException(status_code = err[1], detail=err[0])
     if access["admin"] != True:
         raise exceptions.HTTPException(status_code=401, detail="Admin access required")
-    if len(request.body["company_name"]) == 0 or request.body["company_name"] is None:
+    if len(payload.company_name) == 0 or payload.company_name is None:
         raise exceptions.HTTPException(status_code=400, detail="Company name is required [company_name]")
 
-    util.upload_company_data_to_rabbitmq(request.body["company_name"],access, db, rmq_channel=channel)
+    forward_company_info_request(payload.company_name,access)
 
 @app.get("/get_company_info")
 def get_company_info(request: Request, db: db_dependency):

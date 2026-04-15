@@ -5,6 +5,7 @@ astroid==4.0.3
 certifi==2026.1.4
 charset-normalizer==3.4.4
 click==8.3.1
+debugpy==1.8.20
 dill==0.4.0
 dotenv==0.9.9
 fastapi==0.128.0

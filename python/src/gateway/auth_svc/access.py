@@ -1,4 +1,5 @@
 import os, requests
+import json
 
 def login(request):
     email = request.email
@@ -16,4 +17,4 @@ def validate_token(token):
     if response.status_code != 200:
         return None, (response.text, response.status_code)
     
-    return response.text, None
+    return response.json(), False

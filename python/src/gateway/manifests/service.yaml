@@ -9,5 +9,9 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
+      name: http
       port: 8080
       targetPort: 8080
+    - name: debug
+      port: 5678
+      targetPort: 5678

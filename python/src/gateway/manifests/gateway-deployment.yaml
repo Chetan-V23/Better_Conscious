@@ -23,6 +23,7 @@ spec:
         image: r0dent/gateway
         ports:
         - containerPort: 8080
+        - containerPort: 5678
         envFrom:
         - configMapRef:
             name: gateway-config
