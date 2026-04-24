@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: company-configmap
+data:
+  DEBUG_MODE: "false"
+  DATABASE_SERVER: "host.minikube.internal/conscious_content"

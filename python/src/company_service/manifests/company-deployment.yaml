@@ -22,7 +22,7 @@ spec:
         - name: company
           image: r0dent/company
           ports:
-            - containerports: 8081
+            - containerPort: 8085
           envFrom:
             - configMapRef:
                 name: company-configmap
