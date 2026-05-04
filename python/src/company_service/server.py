@@ -26,8 +26,12 @@ channel = connection.channel()
 
 app = FastAPI()
 
-@app.post("/company}}")
+@app.post("/company")
 def company_info_sms(payload: CompanyPayload, db: db_dependency):
 
     logger.info(f"Received request to process company info for sms: {payload.sms}")
-    process_company_by_sms(payload.sms)
+    process_company_by_sms(payload.sms, db, email_id=payload.email_id, channel=channel)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8085)

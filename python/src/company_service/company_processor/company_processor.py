@@ -5,7 +5,7 @@ from rabbit_mq_helper.company_queue import send_company_to_process_through_rabbi
 from fastapi.exceptions import HTTPException
 from logger import logger
 
-def process_company_by_sms(sms: str, db: db_dependency):
+def process_company_by_sms(sms: str, db: db_dependency, email_id, channel):
     """
     this method returns company name, id and acts, after retreiving from the database if it exists
     """
@@ -20,11 +20,12 @@ def process_company_by_sms(sms: str, db: db_dependency):
             return company_acts, 200
             
         else:
-            send_company_to_process_through_rabbit_mq(company_name)
+            send_company_to_process_through_rabbit_mq(company_name, email_id, channel)
             #TODO: IMPLEMENT A REDIS LOCK TO WAIT FOR THE COMPANY TO BE PROCESSED AND THEN RETRIEVE THE DATA FROM THE DATABASE
     except Exception as e:
         logger.error(f"Error processing company info for sms: {sms}, error: {str(e)}")
         return str(e), 500
+
 
 _SMS_MERCHANT_PATTERNS = [
     # ICICI "spent on DATE on MERCHANT." — e.g. "on 19-Feb-26 on IRON HILL U O L."
