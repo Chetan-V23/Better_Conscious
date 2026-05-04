@@ -6,5 +6,6 @@ __pycache__/
 secret.yaml
 secrets.yaml
 k8s-mentor.agent.md
+conscious-agent.md
 src.code-workspace
 start.sh

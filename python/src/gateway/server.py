@@ -32,15 +32,15 @@ def login(payload: UserLoginRequest):
 @app.get("/company_acts")
 def upload(request: Request, payload: UserRequestForCompanyInfo):
 
-    access, err = token(request)
+    jwt_token, err = token(request)
     if err:
         return exceptions.HTTPException(status_code = err[1], detail=err[0])
-    if access["admin"] != True:
+    if jwt_token["admin"] != True:
         raise exceptions.HTTPException(status_code=401, detail="Admin access required")
     if len(payload.company_name) == 0 or payload.company_name is None:
         raise exceptions.HTTPException(status_code=400, detail="Company name is required [company_name]")
 
-    forward_company_info_request(payload.company_name,access)
+    forward_company_info_request(payload.company_name,jwt_token["email"], jwt_token["admin"])
 
 @app.get("/get_company_info")
 def get_company_info(request: Request, db: db_dependency):

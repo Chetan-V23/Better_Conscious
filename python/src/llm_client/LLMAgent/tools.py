@@ -11,7 +11,8 @@ def search_using_tavily(company_name: str) -> str:
 
     query = f"List the main atrocities committed by {company_name} against climate and human rights"
 
-    search_tool = TavilySearch(search_type="news", num_results=10)
-    articles = search_tool.invoke(query)
-    context = "\n\n".join([article["title"] + "\n" + article["content"] for article in articles])
+    search_tool = TavilySearch(topic="news", max_results=10)
+    response = search_tool.invoke({"query": query})
+    articles = response.get("results", []) if isinstance(response, dict) else []
+    context = "\n\n".join([article["title"] + "\n" + article.get("url", "") + "\n" + article["content"] for article in articles])
     return context

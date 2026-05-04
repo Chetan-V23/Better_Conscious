@@ -1,9 +1,9 @@
 import requests, os
 
-def forward_company_info_request(company_name, access):
+def forward_company_info_request(company_name,email_id, access):
 
     company_info_svc = os.getenv("COMPANY_INFO_SVC_URL", "http://localhost:8085")
-    response = requests.get(f"{company_info_svc}/get_company_info", json={"company_name": company_name}, headers={"Authorization": f"{access['token']}"})
+    response = requests.get(f"{company_info_svc}/get_company_info", json={"company_name": company_name, "email_id": email_id}, headers={"Authorization": f"{access['token']}"})
     if response.status_code != 200:
         return None, (response.text, response.status_code)
     

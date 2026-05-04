@@ -6,7 +6,7 @@ import pika
 def start(message, channel):
     json_body = json.loads(message)
     agent = Agent()
-    res = agent.invoke_llm(json_body["comany_name"])
+    res = agent.invoke_llm(json_body["company_name"])
     try:
         channel.basic_publish(
             exchange= "",
