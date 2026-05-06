@@ -16,3 +16,30 @@ def get_company_acts_from_database(company_info: CompanyInfo, db: db_dependency)
     """
     logger.info(f"Getting company acts for company: {company_info.company_name} from the database")
     return db.query(CompanyActs).filter(CompanyActs.company_id==company_info.id).all()
+
+
+def write_company_to_database(payload: dict, db: db_dependency):
+    """
+    write company and its acts to the database from an LLM result payload
+    """
+    company_name = payload["company_name"]
+    logger.info(f"Writing company: {company_name} to the database")
+
+    company = db.query(CompanyInfo).filter(CompanyInfo.company_name == company_name).first()
+    if not company:
+        company = CompanyInfo(company_name=company_name)
+        db.add(company)
+        db.flush()
+
+    severity_map = {"low": 1, "medium": 2, "high": 3}
+    for atrocity in payload.get("atrocities", []):
+        severity_int = severity_map.get(atrocity.get("severity", "").lower(), 2)
+        act = CompanyActs(
+            company_id=company.id,
+            act_severity=severity_int,
+            act_title=atrocity.get("title", ""),
+            act_description=atrocity.get("summary", ""),
+        )
+        db.add(act)
+
+    db.commit()

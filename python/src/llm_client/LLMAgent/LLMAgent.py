@@ -8,9 +8,10 @@ from langgraph.graph import StateGraph, START, END, add_messages
 from langgraph.prebuilt import ToolNode
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage, SystemMessage
-from tools import search_using_tavily
+from .tools import search_using_tavily
 import dotenv
 dotenv.load_dotenv()
+from logger import logger
 
 class Agent:
     """
@@ -54,6 +55,8 @@ class Agent:
 
 
     def invoke_llm(self, company_name: str) -> dict:
+
+        logger.info(f"Invoking LLM for company: {company_name}")
         final_state = self.__app.invoke(
             {
                 "company": company_name,
@@ -80,15 +83,15 @@ class Agent:
         if isinstance(content, str):
             import json, re
 
-            # strip markdown code fences if present
             stripped = re.sub(r"^```(?:json)?\s*|\s*```$", "", content.strip())
             try:
                 parsed = json.loads(stripped)
                 if isinstance(parsed, dict):
+                    logger.info(f"LLM response content: {content}")
                     return parsed
             except json.JSONDecodeError:
                 pass
-
+        logger.warning(f"LLM response could not be parsed as JSON: {content}")
         return {
             "company_name": company_name,
             "atrocities": [],

@@ -4,8 +4,10 @@ from database import db_dependency, Base, engine
 from dotenv import load_dotenv
 import pika
 import os
+import threading
 from models.company_request_model import CompanyPayload
 from company_processor.company_processor import process_company_by_sms
+from rabbit_mq_helper.company_acts_consumer import start_company_acts_consumer
 from logger import logger
 
 DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
@@ -22,6 +24,8 @@ Base.metadata.create_all(bind=engine)
 
 connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
+
+threading.Thread(target=start_company_acts_consumer, daemon=True).start()
 
 
 app = FastAPI()
