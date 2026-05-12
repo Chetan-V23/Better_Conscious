@@ -5,4 +5,4 @@ metadata:
 data:
   COMPANY_NAME_QUEUE: company_name
   COMPANY_ACTS_QUEUE: company_acts
-
+  DEBUG_MODE: "false"

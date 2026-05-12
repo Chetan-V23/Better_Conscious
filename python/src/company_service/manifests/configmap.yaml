@@ -5,3 +5,5 @@ metadata:
 data:
   DEBUG_MODE: "false"
   DATABASE_SERVER: "host.minikube.internal/conscious_content"
+  REDIS_URL: "redis://redis:6379"
+  COMPANY_ACTS_QUEUE: "company_acts"

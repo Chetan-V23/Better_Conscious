@@ -6,4 +6,4 @@ class UserLoginRequest(BaseModel):
     password: str
 
 class UserRequestForCompanyInfo(BaseModel):
-    company_name: str
+    sms: str

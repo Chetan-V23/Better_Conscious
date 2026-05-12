@@ -21,6 +21,8 @@ spec:
       containers:
         - name: llmcaller
           image: r0dent/llmcaller
+          ports:
+            - containerPort: 5679
           envFrom:
             - configMapRef:
                 name: llmcaller-configmap
