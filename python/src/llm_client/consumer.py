@@ -9,11 +9,11 @@ load_dotenv()
 
 DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
 
-if DEBUG_MODE:
-    import debugpy
-    debugpy.listen(("0.0.0.0", 5679))
-    print("Debugger listening on port 5679..")
-    debugpy.wait_for_client()
+# if DEBUG_MODE:
+#     import debugpy
+#     debugpy.listen(("0.0.0.0", 5679))
+#     print("Debugger listening on port 5679..")
+#     debugpy.wait_for_client()
 
 def main():
     try:

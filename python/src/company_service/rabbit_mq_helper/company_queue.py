@@ -15,7 +15,7 @@ def send_company_to_process_through_rabbit_mq(company_name: str,username: str, r
         
     rmq_channel.basic_publish(
         exchange='',
-        routing_key='company_data_queue',
+        routing_key=os.getenv("COMPANY_NAME_QUEUE", "company_name"),
         body=json.dumps(message),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,

@@ -10,11 +10,11 @@ from logger import logger
 
 DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
 
-if DEBUG_MODE:
-    import debugpy
-    debugpy.listen(("0.0.0.0", 5678))
-    print("Debugger listening on port 5678..")
-    debugpy.wait_for_client()
+# if DEBUG_MODE:
+#     import debugpy
+#     debugpy.listen(("0.0.0.0", 5678))
+#     print("Debugger listening on port 5678..")
+#     debugpy.wait_for_client()
 
 load_dotenv()
 

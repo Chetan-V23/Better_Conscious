@@ -11,13 +11,13 @@ from database_helper.company_database_helper import get_company_if_exists_in_dat
 from rabbit_mq_helper.company_acts_consumer import start_company_acts_consumer
 from logger import logger
 
-DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
+# DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
 
-if DEBUG_MODE:
-    import debugpy
-    debugpy.listen(("0.0.0.0", 5678))
-    print("Debugger listening on port 5678..")
-    debugpy.wait_for_client()
+# if DEBUG_MODE:
+#     import debugpy
+#     debugpy.listen(("0.0.0.0", 5678))
+#     print("Debugger listening on port 5678..")
+#     debugpy.wait_for_client()
 
 load_dotenv()
 
@@ -25,6 +25,10 @@ Base.metadata.create_all(bind=engine)
 
 threading.Thread(target=start_company_acts_consumer, daemon=True).start()
 
+_rmq_connection = pika.BlockingConnection(
+    pika.ConnectionParameters("rabbitmq", heartbeat=600, blocked_connection_timeout=300)
+)
+channel = _rmq_connection.channel()
 
 app = FastAPI()
 

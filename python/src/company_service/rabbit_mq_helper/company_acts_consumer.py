@@ -43,3 +43,4 @@ def start_company_acts_consumer():
     )
     logger.info("Waiting for company acts messages...")
     channel.start_consuming()
+    
